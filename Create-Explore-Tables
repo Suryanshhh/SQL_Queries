@@ -1,0 +1,60 @@
+-- Create and explore database
+CREATE DATABASE Basics;
+SHOW DATABASES;
+USE Basics;
+SHOW TABLES;
+
+-- Create student table
+CREATE TABLE student (
+    Rollno INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(20) NOT NULL,
+    class INT NOT NULL,
+    email VARCHAR(20) NOT NULL UNIQUE,
+    phone_number BIGINT NOT NULL UNIQUE,
+    Dues ENUM('paid','unpaid')
+);
+
+-- Add a new column
+ALTER TABLE student
+ADD marks INT DEFAULT 0 AFTER phone_number;
+
+-- View table data
+SELECT * FROM student;
+
+-- Add and remove a column
+ALTER TABLE student ADD admission_no INT FIRST;
+ALTER TABLE student DROP COLUMN admission_no;
+
+-- Rename and change columns
+ALTER TABLE student RENAME COLUMN phone_number TO p_n;
+ALTER TABLE student CHANGE name S_name VARCHAR(10);
+ALTER TABLE student CHANGE COLUMN p_n phone BIGINT;
+
+-- View updated structure
+SELECT * FROM student;
+
+-- Modify column properties
+ALTER TABLE student MODIFY COLUMN email VARCHAR(20);
+ALTER TABLE student MODIFY COLUMN phone VARCHAR(10);
+ALTER TABLE student MODIFY COLUMN phone VARCHAR(15) NULL;
+
+-- Working with primary keys
+ALTER TABLE student DROP PRIMARY KEY;
+ALTER TABLE student ADD PRIMARY KEY (email);
+
+ALTER TABLE student MODIFY COLUMN rollno INT;
+ALTER TABLE student DROP PRIMARY KEY;
+ALTER TABLE student ADD PRIMARY KEY (rollno, email);
+
+-- Defaults and constraints
+ALTER TABLE student ALTER dues SET DEFAULT 'unpaid';
+ALTER TABLE student ALTER dues DROP DEFAULT;
+
+ALTER TABLE student MODIFY COLUMN dues ENUM('paid','unpaid');
+ALTER TABLE student MODIFY COLUMN dues ENUM('paid','unpaid') NOT NULL;
+
+ALTER TABLE student ADD CONSTRAINT chk_class CHECK (class > 0);
+ALTER TABLE student DROP CONSTRAINT chk_class;
+
+-- Delete the table
+DROP TABLE student;

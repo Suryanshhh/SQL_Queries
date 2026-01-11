@@ -1,0 +1,107 @@
+ * PRIMARY KEYS IN SQL
+ * This file helps you understand what Primary Keys are and why they are important.
+ * Think of a Primary Key like a unique ID card for each row in a table.
+
+USE basics;
+
+-- Why Primary Keys matter:
+-- 1. They make every row unique
+-- 2. They stop duplicate records
+-- 3. They help connect tables with each other
+-- 4. They make searching faster
+
+
+-- SECTION 1: Simple Primary Key
+-- Here we create a table where student_id is the main identity of each student
+CREATE TABLE students (
+    student_id INT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100)
+);
+
+-- Inserting data with unique student_id values
+INSERT INTO students (student_id, first_name, last_name, email)
+VALUES 
+(1, 'John', 'Smith', 'john.smith@example.com'),
+(2, 'Maria', 'Garcia', 'maria.garcia@example.com'),
+(3, 'Ahmed', 'Khan', 'ahmed.khan@example.com');
+
+-- This will fail because student_id = 1 already exists
+-- Primary Key never allows duplicate values
+INSERT INTO students (student_id, first_name, last_name, email)
+VALUES (1, 'Jane', 'Doe', 'jane.doe@example.com');
+-- Error: Duplicate entry for PRIMARY KEY
+
+
+-- SECTION 2: Auto-Increment Primary Key
+-- Here SQL will automatically generate a new ID for each product
+CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    description TEXT
+);
+
+-- We don’t write product_id, SQL handles it for us
+INSERT INTO products (product_name, price, description)
+VALUES 
+('Laptop', 1299.99, 'High-performance laptop'),
+('Smartphone', 799.99, 'Latest model smartphone'),
+('Headphones', 199.99, 'Noise-cancelling headphones');
+
+-- See how IDs are created automatically
+SELECT * FROM products;
+
+
+-- SECTION 3: Adding Primary Key Later
+-- Creating a table where primary key is defined separately
+CREATE TABLE orders (
+    order_id INT,
+    customer_id INT,
+    order_date DATE NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (order_id)
+);
+
+-- Creating a table without any primary key
+CREATE TABLE suppliers (
+    supplier_id INT,
+    supplier_name VARCHAR(100) NOT NULL,
+    contact_person VARCHAR(100)
+);
+
+-- Now we add a primary key to an existing table
+ALTER TABLE suppliers
+ADD PRIMARY KEY (supplier_id);
+
+
+-- SECTION 4: Composite Primary Key
+-- This table uses two columns together as a single unique identity
+CREATE TABLE enrollments (
+    student_id INT,
+    course_id INT,
+    enrollment_date DATE NOT NULL,
+    grade VARCHAR(2),
+    PRIMARY KEY (student_id, course_id)
+);
+
+-- These combinations are unique, so they work
+INSERT INTO enrollments (student_id, course_id, enrollment_date, grade)
+VALUES 
+(1, 101, '2023-01-15', 'A'),
+(1, 102, '2023-01-15', 'B+'),
+(2, 101, '2023-01-16', 'A-'),
+(3, 103, '2023-01-17', 'B');
+
+-- This fails because (1, 101) already exists
+-- Composite keys also do not allow duplicates
+INSERT INTO enrollments (student_id, course_id, enrollment_date, grade)
+VALUES (1, 101, '2023-02-01', 'C');
+
+
+-- Quick Tips:
+-- 1. Every table should have a Primary Key
+-- 2. AUTO_INCREMENT is best for most ID columns
+-- 3. Use INT or BIGINT for Primary Keys
+-- 4. Use composite keys only when one column is not enough
